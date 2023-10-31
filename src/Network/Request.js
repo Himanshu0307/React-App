@@ -1,4 +1,4 @@
-import { SpinnerContext } from "../Store/SpinnerProvider";
+
 
 export const makeReq=(request,setSpinner)=>{
     setSpinner(()=>true)

@@ -7,9 +7,9 @@ export function applyTheme(theme){
 
 export const createTheme=({primary,secondary,textBase})=>{
     return {
-        "--theme-primary": primary,
-        "--theme-secondary": secondary,
-        "--theme-text-base": textBase,
+        "--primary-color": primary,
+        "--secondary-color": secondary,
+        "--text-base": textBase,
       };
 
 }

@@ -21,7 +21,7 @@ const Dashboard=(({menuList})=>{
         {({open})=>
        <>
         <Disclosure.Button className='w-full mx-auto rounded-2xl bg-white p-2 text-gray-600 font-semibold border border-gray-500'>
-            <span >{x.Module}</span>
+            <span >{"sdfsdfdsfdsf"}</span>
              <ChevronUpIcon className={`${
                 open ? 'rotate-180 transform' : 'rotate-90 transform'
               } h-5 w-5  inline float-right mx-2`} />
