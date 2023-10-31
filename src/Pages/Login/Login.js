@@ -1,45 +1,71 @@
 import { memo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import background from "../../Assets/sssurf.svg"
+import background from "../../Assets/sssurf.svg";
 
-import { TextButton, TextField } from "../../Component/FormComp"
-import { makeReq } from "../../Network/Request";
+import { TextButton, TextField } from "../../Component/FormComp";
 import { SpinnerContext } from "../../Store/SpinnerProvider";
+import { useForm } from "react-hook-form";
+import { makeGetRequest } from "../../Network/Request";
+import { Authenticate } from "../../Network/Auth.service";
 
+const Login = memo(() => {
+  const [_, setShowSpinner] = SpinnerContext();
 
-  const Login=memo(()=>{
-    const [_,setShowSpinner]=SpinnerContext() 
-    const navigate=useNavigate();
-    var username=useRef();
-    var password=useRef();
-    return <div className="shadow-inner w-full h-screen" style={{backgroundImage: `url(${background})`,backgroundSize:'cover'}}>
-        <form className="h-full flex">
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({ mode: "onSubmit" });
+
+  const navigate = useNavigate();
+
+  const onSubmit = async function (data) {
+    const request = {
+      login: data.username,
+      password: data.password,
+      ip: "192.89.89.8",
+      geolocation: "sdfsdfsdfsdf",
+    };
+    var data = Authenticate(request);
+    if (data) {
+      navigate("/");
+    }
+  };
+
+  return (
+    <div
+      className="h-full"
+      style={{ backgroundImage: `url(${background})`, backgroundSize: "cover" }}
+    >
+      <form className="h-full flex" onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col w-3/12 outline outline-offset-2 outline-gray-400 m-auto  place-content-center gap-4 p-4 rounded-lg">
-        <TextField placeholder="Enter Username" ref={username} ></TextField>
-        
-        <TextField placeholder="Enter Password"  ref={password}></TextField>
-        <TextButton color="secondary" text="Login"  onClick={async (event)=>{
-            event.preventDefault()
-            let user=username.current.value
-            let pass=password.current.value
-            try{
-                var request={username:user,password:pass}
-                var response=await makeReq(request,setShowSpinner);
-                document.cookie=`sessionId=${response.sessionid};SameSite=None;Secure`
-                delete response.sessionid
-                sessionStorage.setItem("session",JSON.stringify(response))
-                navigate("/Home")
+          <TextField
+            placeholder="Enter Username"
+            {...register("username", {
+              required: { value: true, message: "Username is required!" },
+              validate: {
+                notEmpty: (value) => !!value.trim() || "Username is required!",
+              },
+            })}
+            errors={errors?.username}
+          ></TextField>
 
-
-            }
-            catch(e){
-                
-                console.log("sdfsf",e.message)
-            }
-        }}></TextButton>
+          <TextField
+            type="password"
+            placeholder="Enter Password"
+            {...register("password", {
+              required: { value: true, message: "Password is required!" },
+              validate: {
+                required: (value) => !!value.trim() || "Password is required!",
+              },
+            })}
+            errors={errors?.password}
+          ></TextField>
+          <TextButton text="Login" type="submit"></TextButton>
         </div>
-        </form>
+      </form>
     </div>
-})
+  );
+});
 
 export default Login;

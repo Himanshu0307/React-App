@@ -1,16 +1,40 @@
+const controller = new AbortController();
 
+export async function makePostRequest(url, body, { headers, spinnerctx } = {}) {
+  if (spinnerctx) {
+    // spinnerct
+  }
 
-export const makeReq=(request,setSpinner)=>{
-    setSpinner(()=>true)
-    return new Promise((resolve,revoke)=>{
-        setInterval(() => {
-           if(request?.username==='User' && request?.password==='User')
-           return resolve({status:200,username:'Subadmin',iconPath:'https://img.freepik.com/free-photo/young-bearded-man-with-striped-shirt_273609-5677.jpg',sessionid:(Math.random() + 1).toString(36).substring(2)})
-            else{
-            return revoke({message:"You are not authorized", status:401})
-        }
-        }, 1000);
-    }).finally(()=>{
-        setSpinner(()=>false)
-    })
+  return fetch(url, {
+    method: "POST",
+    body: JSON.stringify(body),
+    credentials: "include",
+    signal: controller.signal,
+    headers: { "Content-Type": "application/json", ...headers },
+  })
+    .then((data) => data.json())
+    .finally(() => {
+      if (spinnerctx) {
+        // stop spinner
+      }
+    });
+}
+
+export async function makeGetRequest({ url, headers, spinnerctx }) {
+  if (spinnerctx) {
+    // spinnerct
+  }
+
+  return fetch(url, {
+    method: "GET",
+    credentials: "include",
+    mode: "cors",
+    signal: controller.signal,
+    // headers: { ...headers },
+  })
+    .then((data) => data.json())
+    .finally(() => {
+      if (spinnerctx) {
+      }
+    });
 }
